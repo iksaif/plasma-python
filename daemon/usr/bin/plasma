@@ -2,6 +2,7 @@
 
 import png
 import select
+import stat
 import time
 import signal
 import os
@@ -67,7 +68,9 @@ class FIFO():
         try:
             os.mkfifo(self.filename)
         except OSError:
-            pass
+            if os.path.exists(self.filename) and not stat.S_ISFIFO(os.stat(self.filename).st_mode):
+                os.remove(self.filename)
+                os.mkfifo(self.filename)
         print("Opening...")
         self.fifo = os.open(self.filename, os.O_RDONLY | os.O_NONBLOCK)
         print("Open...")
