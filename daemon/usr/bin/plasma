@@ -245,17 +245,20 @@ def main():
                     plasma.set_all(r, g, b, brightness=args.brightness)
                     last_r, last_g, last_b = r, g, b
                     last_brightness = args.brightness
-                    needs_update = False
-                if pixel_colors:
+                    needs_update = True
+                # Re-apply per-pixel overrides on top of the base colour, but
+                # only on frames we're actually going to push to the hardware.
+                if needs_update and pixel_colors:
                     for idx, (pr, pg, pb) in pixel_colors.items():
                         if 0 <= idx < plasma.get_pixel_count():
                             plasma.set_pixel(idx, pr, pg, pb, brightness=args.brightness)
-                    needs_update = True
 
+            # Single place that latches the buffer to the LEDs and clears the
+            # dirty flag. Clearing it anywhere else means set_* calls silently
+            # never reach the hardware.
             if needs_update:
                 plasma.show()
-                if pattern is None and not pixel_colors:
-                    needs_update = False
+                needs_update = False
 
 
 def load_pattern(pattern_name):
