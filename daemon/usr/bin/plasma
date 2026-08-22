@@ -128,7 +128,7 @@ def main():
         last_r, last_g, last_b = -1, -1, -1
         last_brightness = -1
         pixel_colors = {}
-        pattern, pattern_w, pattern_h, pattern_meta = load_pattern("plasma-rainbow")
+        pattern, pattern_w, pattern_h, pattern_meta = load_pattern("default")
         alpha = pattern_meta['alpha']
         channels = 4 if alpha else 3
         last_pattern_offset = -1
